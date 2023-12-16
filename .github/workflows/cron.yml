@@ -1,0 +1,20 @@
+name: Daily Commit
+
+on:
+  schedule:
+    - cron: '0 0,8,16 * * *'  # Schedule runs every day at midnight, 8 AM, and 4 PM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Update code
+      run: |
+        echo "Updated code" >> go-green.txt
+        git add .
+        git commit -m "Automated commit $(date +"%Y-%m-%d %H:%M:%S")"
+        git push
