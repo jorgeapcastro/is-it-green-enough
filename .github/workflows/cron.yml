@@ -17,6 +17,11 @@ jobs:
       with:
         node-version: '16'
 
+    - name: Configure Git
+      run: |
+        git config --global user.email "castro.jorge@gmail.com"
+        git config --global user.name "jorgeapcastro"
+
     - name: Update code
       run: |
         echo "Updated code" >> go-green.txt
