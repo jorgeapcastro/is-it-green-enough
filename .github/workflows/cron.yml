@@ -3,30 +3,18 @@ name: Daily Commit
 on:
   schedule:
     - cron: '0 0,8,16 * * *'  # Schedule runs every day at midnight, 8 AM, and 4 PM UTC
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@master
       with:
-        node-version: '16'
-
-    - name: Configure Git
-      run: |
-        git config --global user.email "castro.jorge@gmail.com"
-        git config --global user.name "jorgeapcastro"
-
-    - name: Update code
+        persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
+        fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+    - name: Create local changes
       run: |
         echo "Updated code" >> go-green.txt
-        git add .
-        git commit -m "Automated commit $(date +"%Y-%m-%d %H:%M:%S")"
-        git push https://$PAT_TOKEN@github.com/${{ github.repository }} HEAD:main
-      env:
-        PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+    - name: Commit & Push changes
+      uses: actions-js/push@master
+      with:
+        github_token: ${{ secrets.PAT_TOKEN }}
